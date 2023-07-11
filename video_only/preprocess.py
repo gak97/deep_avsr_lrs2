@@ -44,8 +44,23 @@ def main():
     print("\n\nStarting preprocessing ....\n")
 
     params = {"roiSize":args["ROI_SIZE"], "normMean":args["NORMALIZATION_MEAN"], "normStd":args["NORMALIZATION_STD"], "vf":vf}
+    
+    # Load the list of processed files
+    if os.path.exists('processed.txt'):
+        with open('processed.txt', 'r') as f:
+            processed_files = f.read().splitlines()
+    else:
+        processed_files = []
+    
     for file in tqdm(filesList, leave=True, desc="Preprocess", ncols=75):
+        # Skip the file if it has been processed
+        if file in processed_files:
+            continue
         preprocess_sample(file, params)
+
+        # After successful processing, add the file to the list of processed files
+        with open('processed.txt', 'a') as f:
+            f.write(file + '\n')
 
     print("\nPreprocessing Done.")
 
