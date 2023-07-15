@@ -134,6 +134,10 @@ def collate_fn(dataBatch):
     """
     Collate function definition used in Dataloaders.
     """
+    dataBatch = [data for data in dataBatch if data is not None]  # Filter out None values
+    # print("Data batch:", dataBatch)
+    if len(dataBatch) == 0:
+        return None
     inputBatch = pad_sequence([data[0] for data in dataBatch])
     if not any(data[1] is None for data in dataBatch):
         targetBatch = torch.cat([data[1] for data in dataBatch])

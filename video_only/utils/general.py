@@ -34,9 +34,18 @@ def train(model, trainLoader, optimizer, loss_function, device, trainParams):
     trainingCER = 0
     trainingWER = 0
 
-    for batch, (inputBatch, targetBatch, inputLenBatch, targetLenBatch) in enumerate(tqdm(trainLoader, leave=False, desc="Train",
-                                                                                          ncols=75)):
-
+    # for batch, (inputBatch, targetBatch, inputLenBatch, targetLenBatch) in enumerate(tqdm(trainLoader, leave=False, desc="Train",
+    #                                                                                       ncols=75)):
+    for batch, dataBatch in enumerate(tqdm(trainLoader, leave=False, desc="Train", ncols=75)):
+        # Check if dataBatch is None
+        if dataBatch is None:
+            print("Empty batch encountered. Skipping...")
+            continue
+        
+        inputBatch, targetBatch, inputLenBatch, targetLenBatch = dataBatch
+        if inputBatch is None or targetBatch is None or inputLenBatch is None or targetLenBatch is None:
+            print("One or more elements in the batch are None. Skipping...")
+            continue
         inputBatch, targetBatch = (inputBatch.float()).to(device), (targetBatch.int()).to(device)
         inputLenBatch, targetLenBatch = (inputLenBatch.int()).to(device), (targetLenBatch.int()).to(device)
 
@@ -71,9 +80,17 @@ def evaluate(model, evalLoader, loss_function, device, evalParams):
     evalCER = 0
     evalWER = 0
 
-    for batch, (inputBatch, targetBatch, inputLenBatch, targetLenBatch) in enumerate(tqdm(evalLoader, leave=False, desc="Eval",
-                                                                                          ncols=75)):
-
+    # for batch, (inputBatch, targetBatch, inputLenBatch, targetLenBatch) in enumerate(tqdm(evalLoader, leave=False, desc="Eval",
+    #                                                                                       ncols=75)):
+    for batch, dataBatch in enumerate(tqdm(evalLoader, leave=False, desc="Eval", ncols=75)):
+        if dataBatch is None:
+            print("Empty batch encountered. Skipping...")
+            continue
+            
+        inputBatch, targetBatch, inputLenBatch, targetLenBatch = dataBatch
+        if inputBatch is None or targetBatch is None or inputLenBatch is None or targetLenBatch is None:
+            print("One or more elements in the batch are None. Skipping...")
+            continue
         inputBatch, targetBatch = (inputBatch.float()).to(device), (targetBatch.int()).to(device)
         inputLenBatch, targetLenBatch = (inputLenBatch.int()).to(device), (targetLenBatch.int()).to(device)
 

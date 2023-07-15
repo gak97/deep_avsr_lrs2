@@ -44,9 +44,15 @@ class LRS2Pretrain(Dataset):
             index = np.random.choice(ixs)
 
         #passing the visual features file and the target file paths to the prepare function to obtain the input tensors
-        visualFeaturesFile = self.datalist[index] + ".npy"
+        visualFeaturesFile = self.datalist[index] + "_gabor.npy"
         targetFile = self.datalist[index] + ".txt"
-        inp, trgt, inpLen, trgtLen = prepare_pretrain_input(visualFeaturesFile, targetFile, self.numWords, self.charToIx, self.videoParams)
+        try:
+            inp, trgt, inpLen, trgtLen = prepare_main_input(visualFeaturesFile, targetFile, self.reqInpLen, self.charToIx, self.videoParams)
+        except FileNotFoundError:
+            # print(f"File {visualFeaturesFile} not found, skipping this file...")
+            return None
+        # inp, trgt, inpLen, trgtLen = prepare_pretrain_input(visualFeaturesFile, targetFile, self.numWords, self.charToIx, self.videoParams)
+        # print("Loaded data:", inp, trgt, inpLen, trgtLen)
         return inp, trgt, inpLen, trgtLen
 
 
@@ -88,9 +94,15 @@ class LRS2Main(Dataset):
             index = np.random.choice(ixs)
 
         #passing the visual features file and the target file paths to the prepare function to obtain the input tensors
-        visualFeaturesFile = self.datalist[index] + ".npy"
+        visualFeaturesFile = self.datalist[index] + "_gabor.npy"
         targetFile = self.datalist[index] + ".txt"
-        inp, trgt, inpLen, trgtLen = prepare_main_input(visualFeaturesFile, targetFile, self.reqInpLen, self.charToIx, self.videoParams)
+        try:
+            inp, trgt, inpLen, trgtLen = prepare_main_input(visualFeaturesFile, targetFile, self.reqInpLen, self.charToIx, self.videoParams)
+        except FileNotFoundError:
+            # print(f"File {visualFeaturesFile} not found, skipping this file...")
+            return None
+        # inp, trgt, inpLen, trgtLen = prepare_main_input(visualFeaturesFile, targetFile, self.reqInpLen, self.charToIx, self.videoParams)
+        # print("Loaded data:", inp, trgt, inpLen, trgtLen)
         return inp, trgt, inpLen, trgtLen
 
 
